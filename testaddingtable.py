@@ -54,8 +54,8 @@ class Ui_MainWindow(object):
         self.dateEdit.setObjectName("dateEdit")
 
         self.tableView = QtWidgets.QTableWidget(self.centralwidget)
-        self.tableView.setRowCount(5)
-        self.tableView.setColumnCount(5)
+        self.tableView.setColumnCount(6)
+        self.tableView.setRowCount(2)
         self.tableView.setGeometry(QtCore.QRect(10, 10, 671, 211))
         self.tableView.setObjectName("tableView")
 
@@ -143,7 +143,6 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -164,20 +163,25 @@ class Ui_MainWindow(object):
         price = self.price_input.toPlainText()
         quantity = self.quantity_input.toPlainText()
         dict1 = {}
-        dict1[name] = price, quantity
+        dict1[name] = [price, quantity]
         with open("dict1.pkl", "ab") as f:
             pickle.dump(dict1, f, pickle.HIGHEST_PROTOCOL)
         with open("dict1.pkl", "rb") as p:
-            row = 0
+            header = []
             cols = 0
             while 1:
                 try:
                     dict2 = pickle.load(p)
                     print(dict2)
                     for key in dict2.keys():
-                        item = QTableWidgetItem(key)
-                        self.tableView.setItem(row, cols, item)
+                        header.append(key)
+                        row = 0
+                        for item in dict2[key]:
+                            item = QTableWidgetItem(item)
+                            self.tableView.setItem(row, cols, item)
+                            row += 1
                         cols += 1
+                    self.tableView.setHorizontalHeaderLabels(header)
                 except:
                     break
         """header = []
