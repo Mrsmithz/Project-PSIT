@@ -54,7 +54,7 @@ class Ui_MainWindow(object):
         self.dateEdit.setObjectName("dateEdit")
 
         self.tableView = QtWidgets.QTableWidget(self.centralwidget)
-        self.tableView.setColumnCount(6)
+        #self.tableView.setColumnCount(6)
         self.tableView.setRowCount(2)
         self.tableView.setGeometry(QtCore.QRect(10, 10, 671, 211))
         self.tableView.setObjectName("tableView")
@@ -157,7 +157,6 @@ class Ui_MainWindow(object):
         self.actionExport.setText(_translate("MainWindow", "Export"))
         self.actionImport.setText(_translate("MainWindow", "Import"))
     def test(self, *args):
-        """Test adding item to Table Columns and Rows"""
         if not self.name_input.toPlainText():
             return
         name = self.name_input.toPlainText()
@@ -166,17 +165,19 @@ class Ui_MainWindow(object):
         dict1 = {}
         dict1[name] = [price, quantity]
         with open("dict1.pkl", "ab") as f:
-            pickle.dump(dict1, f, pickle.HIGHEST_PROTOCOL) # Export Files
-        with open("dict1.pkl", "rb") as p: # Import Files
+            pickle.dump(dict1, f, pickle.HIGHEST_PROTOCOL)
+        with open("dict1.pkl", "rb") as p:
             header = []
-            cols = 0 #Reset when open files to recreate Table
+            cols = 0
+            self.tableView.setColumnCount(0)
             while 1:
                 try:
-                    dict2 = pickle.load(p) #Adding item to table
+                    dict2 = pickle.load(p)
                     print(dict2)
                     for key in dict2.keys():
                         header.append(key)
                         row = 0
+                        self.tableView.insertColumn(cols)
                         for item in dict2[key]:
                             item = QTableWidgetItem(item)
                             self.tableView.setItem(row, cols, item)
