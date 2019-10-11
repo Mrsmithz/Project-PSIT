@@ -157,6 +157,7 @@ class Ui_MainWindow(object):
         self.actionExport.setText(_translate("MainWindow", "Export"))
         self.actionImport.setText(_translate("MainWindow", "Import"))
     def test(self, *args):
+        """Test adding item to Table Columns and Rows"""
         if not self.name_input.toPlainText():
             return
         name = self.name_input.toPlainText()
@@ -165,13 +166,13 @@ class Ui_MainWindow(object):
         dict1 = {}
         dict1[name] = [price, quantity]
         with open("dict1.pkl", "ab") as f:
-            pickle.dump(dict1, f, pickle.HIGHEST_PROTOCOL)
-        with open("dict1.pkl", "rb") as p:
+            pickle.dump(dict1, f, pickle.HIGHEST_PROTOCOL) # Export Files
+        with open("dict1.pkl", "rb") as p: # Import Files
             header = []
-            cols = 0
+            cols = 0 #Reset when open files to recreate Table
             while 1:
                 try:
-                    dict2 = pickle.load(p)
+                    dict2 = pickle.load(p) #Adding item to table
                     print(dict2)
                     for key in dict2.keys():
                         header.append(key)
