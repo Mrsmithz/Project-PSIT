@@ -12,7 +12,7 @@
  - [Python 3.7](https://docs.python.org/3.7/)
  - [PyQt5](https://www.riverbankcomputing.com/static/Docs/PyQt5/)
 
-### Expedted Gain
+### Expected Gain
  - ฝึกฝนทักษะการเขียนโปรแกรมด้วย Python
  - ฝึกฝนการคิดและการแก้ปัญหาอย่างเป็นระบบ
  - ทดลองแก้ไขปัญหาจากภาวะปัญหาที่เกิดขึ้นจริง
