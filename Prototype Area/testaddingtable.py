@@ -11,6 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtWidgets import QTableWidgetItem
 import pickle
+import sqlite3
 
 
 class Ui_MainWindow(object):
@@ -20,10 +21,20 @@ class Ui_MainWindow(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
 
+        self.clearbtn = QtWidgets.QPushButton(self.centralwidget)
+        self.clearbtn.clicked.connect(self.clear)
+        self.clearbtn.setGeometry(QtCore.QRect(250, 620, 111, 51))
+        self.clearbtn.setObjectName("clearbtn")
+
         self.submitbtn = QtWidgets.QPushButton(self.centralwidget)
         self.submitbtn.clicked.connect(self.test)
         self.submitbtn.setGeometry(QtCore.QRect(10, 620, 111, 51))
         self.submitbtn.setObjectName("submitbtn")
+
+        self.updatebtn = QtWidgets.QPushButton(self.centralwidget)
+        self.updatebtn.clicked.connect(self.update)
+        self.updatebtn.setGeometry(QtCore.QRect(130, 620, 111, 51))
+        self.updatebtn.setObjectName("updatebtn")
 
         self.name_input = QtWidgets.QTextEdit(self.centralwidget)
         self.name_input.setGeometry(QtCore.QRect(90, 230, 291, 41))
@@ -143,10 +154,15 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+        self.conn = sqlite3.connect('test.db')
+        self.c = self.conn.cursor()
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.submitbtn.setText(_translate("MainWindow", "Submit"))
+        self.updatebtn.setText(_translate("MainWindow", "Update"))
+        self.clearbtn.setText(_translate("MainWindow", "Clear"))
         self.label_3.setText(_translate("MainWindow", "MovedInDate : "))
         self.label.setText(_translate("MainWindow", "Name : "))
         self.label_2.setText(_translate("MainWindow", "Price  :"))
@@ -162,37 +178,71 @@ class Ui_MainWindow(object):
         name = self.name_input.toPlainText()
         price = self.price_input.toPlainText()
         quantity = self.quantity_input.toPlainText()
+        monthly = self.month_input.toPlainText()
+        notes = self.notes_input.toPlainText()
         dict1 = {}
-        dict1[name] = [price, quantity]
-        with open("dict1.pkl", "ab") as f:
-            pickle.dump(dict1, f, pickle.HIGHEST_PROTOCOL)
+        dict1[name] = [price, quantity, monthly, notes]
+        if dict1:
+            with open("dict1.pkl", "ab") as f:
+                pickle.dump(dict1, f, pickle.HIGHEST_PROTOCOL)
         with open("dict1.pkl", "rb") as p:
             header = []
-            cols = 0
-            self.tableView.setColumnCount(0)
+            header2 = ["Price", "Quantity", "Monthly Rate", "Notes"]
+            row = 0
+            self.tableView.setColumnCount(4)
+            self.tableView.setRowCount(0)
             while 1:
                 try:
                     dict2 = pickle.load(p)
                     print(dict2)
                     for key in dict2.keys():
                         header.append(key)
-                        row = 0
-                        self.tableView.insertColumn(cols)
+                        cols = 0
+                        self.tableView.insertRow(row)
                         for item in dict2[key]:
                             item = QTableWidgetItem(item)
                             self.tableView.setItem(row, cols, item)
-                            row += 1
-                        cols += 1
-                    self.tableView.setHorizontalHeaderLabels(header)
+                            cols += 1
+                        row += 1
+                    self.tableView.setHorizontalHeaderLabels(header2)
+                    self.tableView.setVerticalHeaderLabels(header)
                 except:
                     break
-        """header = []
-        for n, key in enumerate(sorted(dict2.keys())):
-            header.append(key)
-            for m, item in enumerate(dict2[key]):
-                newitem = QTableWidgetItem(item)
-                self.tableView.setItem(m, n, newitem)
-        self.tableView.setHorizontalHeaderLabels(header)"""
+    def update(self, *args):
+        dict1 = {}
+        #dict1[name] = [price, quantity]
+        if dict1:
+            with open("dict1.pkl", "ab") as f:
+                pickle.dump(dict1, f, pickle.HIGHEST_PROTOCOL)
+        with open("dict1.pkl", "rb") as p:
+            header = []
+            header2 = ["Price", "Quantity", "Monthly Rate", "Notes"]
+            row = 0
+            self.tableView.setColumnCount(4)
+            self.tableView.setRowCount(0)
+            while 1:
+                try:
+                    dict2 = pickle.load(p)
+                    print(dict2)
+                    for key in dict2.keys():
+                        header.append(key)
+                        cols = 0
+                        self.tableView.insertRow(row)
+                        for item in dict2[key]:
+                            item = QTableWidgetItem(item)
+                            self.tableView.setItem(row, cols, item)
+                            cols += 1
+                        row += 1
+                    self.tableView.setHorizontalHeaderLabels(header2)
+                    self.tableView.setVerticalHeaderLabels(header)
+                except:
+                    break
+    def clear(self, *args):
+        self.name_input.clear()
+        self.price_input.clear()
+        self.quantity_input.clear()
+        self.month_input.clear()
+        self.notes_input.clear()
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)

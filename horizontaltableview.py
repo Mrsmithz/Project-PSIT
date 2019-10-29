@@ -66,7 +66,7 @@ class Ui_MainWindow(object):
 
         self.tableView = QtWidgets.QTableWidget(self.centralwidget)
         #self.tableView.setColumnCount(6)
-        self.tableView.setRowCount(2)
+        #self.tableView.setRowCount(2)
         self.tableView.setGeometry(QtCore.QRect(10, 10, 671, 211))
         self.tableView.setObjectName("tableView")
 
@@ -180,16 +180,17 @@ class Ui_MainWindow(object):
         quantity = self.quantity_input.toPlainText()
         monthly = self.month_input.toPlainText()
         notes = self.notes_input.toPlainText()
+        date = self.dateEdit.date().toPyDate()
         dict1 = {}
-        dict1[name] = [price, quantity, monthly, notes]
+        dict1[name] = [price, quantity, date, monthly, notes]
         if dict1:
             with open("dict1.pkl", "ab") as f:
                 pickle.dump(dict1, f, pickle.HIGHEST_PROTOCOL)
         with open("dict1.pkl", "rb") as p:
             header = []
-            header2 = ["Price", "Quantity", "Monthly Rate", "Notes"]
+            header2 = ["Price", "Quantity", "MovedInDate", "Monthly Rate", "Notes"]
             row = 0
-            self.tableView.setColumnCount(4)
+            self.tableView.setColumnCount(5)
             self.tableView.setRowCount(0)
             while 1:
                 try:
@@ -216,9 +217,9 @@ class Ui_MainWindow(object):
                 pickle.dump(dict1, f, pickle.HIGHEST_PROTOCOL)
         with open("dict1.pkl", "rb") as p:
             header = []
-            header2 = ["Price", "Quantity", "Monthly Rate", "Notes"]
+            header2 = ["Price", "Quantity", "MovedInDate", "Monthly Rate", "Notes"]
             row = 0
-            self.tableView.setColumnCount(4)
+            self.tableView.setColumnCount(5)
             self.tableView.setRowCount(0)
             while 1:
                 try:
