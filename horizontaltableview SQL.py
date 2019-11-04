@@ -10,15 +10,29 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtWidgets import QTableWidgetItem
+from PyQt5.QtWidgets import QApplication
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QAction
+from PyQt5.QtWidgets import QLineEdit
+from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QMenu
+from PyQt5.QtWidgets import QMenuBar
+from PyQt5.QtWidgets import QPushButton
+from PyQt5.QtWidgets import QWidget
 import pickle
 import sqlite3
+import sys
 
 
-class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
-        MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1024, 800)
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
+class Ui_MainWindow(QMainWindow):
+    def __init__(self):
+        super(Ui_MainWindow, self).__init__()
+
+    def setupUi(self):
+        self.setObjectName("MainWindow")
+        self.resize(1024, 800)
+
+        self.centralwidget = QtWidgets.QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
 
         self.clearbtn = QtWidgets.QPushButton(self.centralwidget)
@@ -27,7 +41,7 @@ class Ui_MainWindow(object):
         self.clearbtn.setObjectName("clearbtn")
 
         self.submitbtn = QtWidgets.QPushButton(self.centralwidget)
-        self.submitbtn.clicked.connect(self.test)
+        self.submitbtn.clicked.connect(self.submit)
         self.submitbtn.setGeometry(QtCore.QRect(10, 620, 111, 51))
         self.submitbtn.setObjectName("submitbtn")
 
@@ -66,9 +80,13 @@ class Ui_MainWindow(object):
         self.dateEdit.setObjectName("dateEdit")
 
         self.tableView = QtWidgets.QTableWidget(self.centralwidget)
-        #self.tableView.setColumnCount(5)
-        #self.tableView.setRowCount(0)
-        self.tableView.setGeometry(QtCore.QRect(10, 10, 671, 211))
+        self.tableView.setEditTriggers(QtWidgets.QAbstractItemView.DoubleClicked)
+        header = self.tableView.horizontalHeader()
+        header.setDefaultSectionSize(190)
+        self.tableView.doubleClicked.connect(self.test)
+        self.tableView.cellPressed.connect(self.test)
+        #header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        self.tableView.setGeometry(QtCore.QRect(10, 10, 1001, 211))
         self.tableView.setObjectName("tableView")
 
         self.label_3 = QtWidgets.QLabel(self.centralwidget)
@@ -127,25 +145,25 @@ class Ui_MainWindow(object):
         self.notes_input.setFont(font)
         self.notes_input.setObjectName("textEdit_4")
 
-        self.listView = QtWidgets.QListView(self.centralwidget)
-        self.listView.setGeometry(QtCore.QRect(700, 10, 301, 541))
-        self.listView.setObjectName("listView")
+        #self.listView = QtWidgets.QListView(self.centralwidget)
+        #self.listView.setGeometry(QtCore.QRect(700, 10, 301, 541))
+        #self.listView.setObjectName("listView")
 
-        MainWindow.setCentralWidget(self.centralwidget)
-        self.statusbar = QtWidgets.QStatusBar(MainWindow)
+        self.setCentralWidget(self.centralwidget)
+        self.statusbar = QtWidgets.QStatusBar(self)
         self.statusbar.setObjectName("statusbar")
 
-        MainWindow.setStatusBar(self.statusbar)
-        self.menuBar = QtWidgets.QMenuBar(MainWindow)
+        self.setStatusBar(self.statusbar)
+        self.menuBar = QtWidgets.QMenuBar(self)
         self.menuBar.setGeometry(QtCore.QRect(0, 0, 1024, 21))
         self.menuBar.setObjectName("menuBar")
         self.menuasd = QtWidgets.QMenu(self.menuBar)
         self.menuasd.setObjectName("menuasd")
 
-        MainWindow.setMenuBar(self.menuBar)
-        self.actionExport = QtWidgets.QAction(MainWindow)
+        self.setMenuBar(self.menuBar)
+        self.actionExport = QtWidgets.QAction(self)
         self.actionExport.setObjectName("actionExport")
-        self.actionImport = QtWidgets.QAction(MainWindow)
+        self.actionImport = QtWidgets.QAction(self)
         self.actionImport.setObjectName("actionImport")
 
         self.menuasd.addSeparator()
@@ -153,11 +171,12 @@ class Ui_MainWindow(object):
         self.menuasd.addAction(self.actionImport)
         self.menuBar.addAction(self.menuasd.menuAction())
 
-        self.retranslateUi(MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        self.retranslateUi(self)
+        QtCore.QMetaObject.connectSlotsByName(self)
 
         self.conn = sqlite3.connect('test.db')
         self.cur = self.conn.cursor()
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -173,7 +192,7 @@ class Ui_MainWindow(object):
         self.menuasd.setTitle(_translate("MainWindow", "Files"))
         self.actionExport.setText(_translate("MainWindow", "Export"))
         self.actionImport.setText(_translate("MainWindow", "Import"))
-    def test(self, *args):
+    def submit(self, *args):
         if not self.name_input.toPlainText():
             return
         name = self.name_input.toPlainText()
@@ -184,8 +203,8 @@ class Ui_MainWindow(object):
         notes = self.notes_input.toPlainText()
         self.cur.execute("insert into items values (?, ?, ?, ?, ?, ?)", (name, price, quantity, date, monthly, notes))
         self.conn.commit()
-        self.cur.execute("select * from items")
-        list1 = self.c.fetchall()
+        list1 = self.cur.execute("select * from items")
+        #list1 = self.cur.fetchall()
         header = []
         header2 = ["Price", "Quantity", "MovedInDate", "Monthly Rate", "Notes"]
         self.tableView.setColumnCount(5)
@@ -203,8 +222,8 @@ class Ui_MainWindow(object):
         self.tableView.setHorizontalHeaderLabels(header2)
         self.tableView.setVerticalHeaderLabels(header)
     def update(self, *args):
-        self.cur.execute("select * from items")
-        list1 = self.cur.fetchall()
+        list1 = self.cur.execute("select * from items")
+        #list1 = self.cur.fetchall()
         header = []
         header2 = ["Price", "Quantity", "MovedInDate", "Monthly Rate", "Notes"]
         row = 0
@@ -227,11 +246,25 @@ class Ui_MainWindow(object):
         self.quantity_input.clear()
         self.month_input.clear()
         self.notes_input.clear()
+    def test(self):
+        row = self.tableView.rowCount()
+        col = self.tableView.columnCount()
+        header2 = ["price", "quantity", "movedindate", "monthlyrate", "notes"]
+        list_name = self.cur.execute("select name from items")
+        list_name = self.cur.fetchall()
+        for rows in range(row):
+            for cols in range(col):
+                item = self.tableView.item(rows, cols)
+                name = list_name[rows]
+                self.cur.execute('UPDATE items SET '+header2[cols]+' = ? WHERE name = ?', (item.text(), name[0]))
+        self.conn.commit()
+    def keyPressEvent(self, e):
+        pass
 if __name__ == "__main__":
-    import sys
     app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
+    #self = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
+    ui.setupUi()
+    ui.show()
+    ui.update()
     sys.exit(app.exec_())
