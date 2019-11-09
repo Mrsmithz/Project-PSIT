@@ -19,9 +19,11 @@ from PyQt5.QtWidgets import QMenu
 from PyQt5.QtWidgets import QMenuBar
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtWidgets import QWidget
+from PyQt5.QtCore import QTimer
 import pickle
 import sqlite3
 import sys
+from plotcanvas import MyDynamicMplCanvas
 
 
 class Ui_MainWindow(QMainWindow):
@@ -31,6 +33,9 @@ class Ui_MainWindow(QMainWindow):
     def setupUi(self):
         self.setObjectName("MainWindow")
         self.resize(1024, 800)
+
+        self.conn = sqlite3.connect('test.db')
+        self.cur = self.conn.cursor()
 
         self.centralwidget = QtWidgets.QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
@@ -174,8 +179,12 @@ class Ui_MainWindow(QMainWindow):
         self.retranslateUi(self)
         QtCore.QMetaObject.connectSlotsByName(self)
 
-        self.conn = sqlite3.connect('test.db')
-        self.cur = self.conn.cursor()
+        self.plotpie = QtWidgets.QWidget(self.centralwidget)
+        self.plotpie.setGeometry(QtCore.QRect(400, 270, 611, 471))
+        self.testui = QtWidgets.QVBoxLayout(self.plotpie)
+        self.pie = MyDynamicMplCanvas(self.plotpie)
+        self.testui.addWidget(self.pie)
+
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -223,7 +232,6 @@ class Ui_MainWindow(QMainWindow):
         self.tableView.setVerticalHeaderLabels(header)
     def update(self, *args):
         list1 = self.cur.execute("select * from items")
-        #list1 = self.cur.fetchall()
         header = []
         header2 = ["Price", "Quantity", "MovedInDate", "Monthly Rate", "Notes"]
         row = 0
@@ -259,6 +267,8 @@ class Ui_MainWindow(QMainWindow):
                 self.cur.execute('UPDATE items SET '+header2[cols]+' = ? WHERE name = ?', (item.text(), name[0]))
         self.conn.commit()
     def keyPressEvent(self, e):
+        pass
+    def plot(self):
         pass
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
