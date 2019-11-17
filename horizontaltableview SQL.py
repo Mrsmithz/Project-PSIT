@@ -88,8 +88,8 @@ class Ui_MainWindow(QMainWindow):
         self.tableView.setEditTriggers(QtWidgets.QAbstractItemView.DoubleClicked)
         header = self.tableView.horizontalHeader()
         header.setDefaultSectionSize(190)
-        self.tableView.doubleClicked.connect(self.test)
-        self.tableView.cellPressed.connect(self.test)
+        self.tableView.doubleClicked.connect(self.savefromtable)
+        self.tableView.cellPressed.connect(self.savefromtable)
         #header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
         self.tableView.setGeometry(QtCore.QRect(10, 10, 1001, 211))
         self.tableView.setObjectName("tableView")
@@ -254,11 +254,11 @@ class Ui_MainWindow(QMainWindow):
         self.quantity_input.clear()
         self.month_input.clear()
         self.notes_input.clear()
-    def test(self):
+    def savefromtable(self):
         row = self.tableView.rowCount()
         col = self.tableView.columnCount()
         header2 = ["price", "quantity", "movedindate", "monthlyrate", "notes"]
-        list_name = self.cur.execute("select name from items")
+        list_name = self.cur.execute("select name from items order by rowid")
         list_name = self.cur.fetchall()
         for rows in range(row):
             for cols in range(col):
