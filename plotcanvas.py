@@ -19,9 +19,10 @@ class MyDynamicMplCanvas(Canvas):
 
     def __init__(self, *args, **kwargs):
         Canvas.__init__(self, *args, **kwargs)
-        timer = QtCore.QTimer(self)
         self.conn = sqlite3.connect('test.db')
         self.cur = self.conn.cursor()
+        self.plot()
+        timer = QtCore.QTimer(self)
         timer.timeout.connect(self.plot)
         timer.start(1000)
 
@@ -34,8 +35,7 @@ class MyDynamicMplCanvas(Canvas):
         for i in data:
             labels.append(i[0])
             value.append(i[1])
-        print(labels, value)
         ax = self.figure.add_subplot(111)
         ax.cla()
-        ax.pie(value, labels=labels)
+        ax.pie(value, labels=labels, autopct="%1.1f%%", shadow=True)
         self.draw()
