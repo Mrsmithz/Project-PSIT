@@ -24,6 +24,7 @@ import pickle
 import sqlite3
 import sys
 from plotcanvas import MyDynamicMplCanvas
+from PyQt5.QtWidgets import QMenu
 
 
 class Ui_MainWindow(QMainWindow):
@@ -52,7 +53,7 @@ class Ui_MainWindow(QMainWindow):
         self.submitbtn.setObjectName("submitbtn")
 
         self.updatebtn = QtWidgets.QPushButton(self.centralwidget)
-        self.updatebtn.clicked.connect(self.update)
+        self.updatebtn.clicked.connect(self.delete)
         self.updatebtn.setGeometry(QtCore.QRect(130, 620, 111, 51))
         self.updatebtn.setObjectName("updatebtn")
 
@@ -89,10 +90,8 @@ class Ui_MainWindow(QMainWindow):
         self.tableView.setEditTriggers(QtWidgets.QAbstractItemView.DoubleClicked)
         header = self.tableView.horizontalHeader()
         header.setDefaultSectionSize(190)
-        #self.tableView.horizontalHeader().sectionClicked.connect(self.test)
         self.tableView.doubleClicked.connect(self.savefromtable)
         self.tableView.cellPressed.connect(self.savefromtable)
-        #header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
         self.tableView.setGeometry(QtCore.QRect(10, 10, 1001, 211))
         self.tableView.setObjectName("tableView")
 
@@ -152,9 +151,6 @@ class Ui_MainWindow(QMainWindow):
         self.notes_input.setFont(font)
         self.notes_input.setObjectName("textEdit_4")
 
-        #self.listView = QtWidgets.QListView(self.centralwidget)
-        #self.listView.setGeometry(QtCore.QRect(700, 10, 301, 541))
-        #self.listView.setObjectName("listView")
 
         self.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(self)
@@ -192,7 +188,7 @@ class Ui_MainWindow(QMainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "PSIT ON FIRE!!"))
         self.submitbtn.setText(_translate("MainWindow", "Submit"))
-        self.updatebtn.setText(_translate("MainWindow", "Update"))
+        self.updatebtn.setText(_translate("MainWindow", "Delete"))
         self.clearbtn.setText(_translate("MainWindow", "Clear"))
         self.label_3.setText(_translate("MainWindow", "MovedInDate : "))
         self.label.setText(_translate("MainWindow", "Name : "))
@@ -270,8 +266,9 @@ class Ui_MainWindow(QMainWindow):
         self.conn.commit()
     def keyPressEvent(self, e):
         pass
-    def test(self, position):
-        pass
+    def delete(self):
+        row = self.tableView.currentRow()
+        self.tableView.removeRow(row)
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     #self = QtWidgets.QMainWindow()
