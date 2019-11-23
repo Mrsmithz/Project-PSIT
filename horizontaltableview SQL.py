@@ -46,6 +46,7 @@ class Ui_MainWindow(QMainWindow):
         self.clearbtn.setObjectName("clearbtn")
 
         self.submitbtn = QtWidgets.QPushButton(self.centralwidget)
+
         self.submitbtn.clicked.connect(self.submit)
         self.submitbtn.setGeometry(QtCore.QRect(10, 620, 111, 51))
         self.submitbtn.setObjectName("submitbtn")
@@ -88,6 +89,7 @@ class Ui_MainWindow(QMainWindow):
         self.tableView.setEditTriggers(QtWidgets.QAbstractItemView.DoubleClicked)
         header = self.tableView.horizontalHeader()
         header.setDefaultSectionSize(190)
+        #self.tableView.horizontalHeader().sectionClicked.connect(self.test)
         self.tableView.doubleClicked.connect(self.savefromtable)
         self.tableView.cellPressed.connect(self.savefromtable)
         #header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
@@ -188,7 +190,7 @@ class Ui_MainWindow(QMainWindow):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "PSIT ON FIRE!!"))
         self.submitbtn.setText(_translate("MainWindow", "Submit"))
         self.updatebtn.setText(_translate("MainWindow", "Update"))
         self.clearbtn.setText(_translate("MainWindow", "Clear"))
@@ -268,7 +270,7 @@ class Ui_MainWindow(QMainWindow):
         self.conn.commit()
     def keyPressEvent(self, e):
         pass
-    def plot(self):
+    def test(self, position):
         pass
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
