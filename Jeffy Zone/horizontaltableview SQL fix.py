@@ -48,8 +48,7 @@ class Ui_MainWindow(QMainWindow):
         self.clearbtn.setObjectName("clearbtn")
 
         self.submitbtn = QtWidgets.QPushButton(self.centralwidget)
-
-        self.submitbtn.clicked.connect(self.submit)
+        self.submitbtn.clicked.connect(self.submitask)
         self.submitbtn.setGeometry(QtCore.QRect(10, 620, 111, 51))
         self.submitbtn.setObjectName("submitbtn")
 
@@ -282,7 +281,10 @@ class Ui_MainWindow(QMainWindow):
     def delete(self):
         row = self.tableView.currentRow()
         self.tableView.removeRow(row)
-
+    def submitask(self):
+        buttonReply = QMessageBox.question(self, 'Submit', "Do you want to submit?", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+        if buttonReply == QMessageBox.Yes:
+            self.submit()
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
