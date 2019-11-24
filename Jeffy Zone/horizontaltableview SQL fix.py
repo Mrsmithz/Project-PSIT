@@ -206,20 +206,12 @@ class Ui_MainWindow(QMainWindow):
         name = self.name_input.toPlainText()
         try:
             price = float(self.price_input.toPlainText())
-        except:
-            self.valueerror()
-            return
-        try:
             quantity = int(self.quantity_input.toPlainText())
-        except:
-            self.valueerror()
-            return
-        date = self.dateEdit.date().toPyDate()
-        try:
             monthly = float(self.month_input.toPlainText())
         except:
             self.valueerror()
             return
+        date = self.dateEdit.date().toPyDate()
         notes = self.notes_input.toPlainText()
         self.cur.execute("insert into items values (?, ?, ?, ?, ?, ?)", (name, price, quantity, date, monthly, notes))
         self.conn.commit()
