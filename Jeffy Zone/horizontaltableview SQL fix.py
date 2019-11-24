@@ -206,10 +206,18 @@ class Ui_MainWindow(QMainWindow):
         name = self.name_input.toPlainText()
         try:
             price = float(self.price_input.toPlainText())
+        except:
+            self.priceerror()
+            return
+        try:
             quantity = int(self.quantity_input.toPlainText())
+        except:
+            self.quantityerror()
+            return
+        try:
             monthly = float(self.month_input.toPlainText())
         except:
-            self.valueerror()
+            self.monthlyerror()
             return
         date = self.dateEdit.date().toPyDate()
         notes = self.notes_input.toPlainText()
@@ -274,8 +282,12 @@ class Ui_MainWindow(QMainWindow):
     def delete(self):
         row = self.tableView.currentRow()
         self.tableView.removeRow(row)
-    def valueerror(self):
-        QMessageBox.about(self, "Error", "ใส่ตัวเลขโว้ย ไอควาย")
+    def priceerror(self):
+        QMessageBox.about(self, "Input Error", "Please enter numbers in the Price box.")
+    def quantityerror(self):
+        QMessageBox.about(self, "Input Error", "Please enter numbers in the Quantity box.")
+    def monthlyerror(self):
+        QMessageBox.about(self, "Input Error", "Please enter numbers in the Monthly box.")
 
 
 if __name__ == "__main__":
