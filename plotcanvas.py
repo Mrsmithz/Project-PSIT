@@ -6,6 +6,8 @@ from PyQt5 import QtCore
 import random
 import sqlite3
 import time
+import numpy as np
+
 
 class Canvas(FigureCanvas):
     def __init__(self, parent=None, width=5, height=4, dpi=100):
@@ -83,3 +85,44 @@ class MyDynamicMplCanvas(Canvas):
         timer3.timeout.connect(self.liveplot)
         timer3.setSingleShot(True)
         timer3.start(1000)
+
+class barplot(Canvas):
+    def __init__(self, *args, **kwargs):
+        Canvas.__init__(self, *args, **kwargs)
+        self.conn = sqlite3.connect('test.db')
+        self.cur = self.conn.cursor()
+        self.get_data()
+    def get_data(self):
+        self.labels = []
+        self.price = []
+        self.quantity = []
+        self.rate = []
+        self.ax = self.figure.add_subplot(111)
+        data = self.cur.execute('select * from items')
+        for i in data:
+            self.labels.append(i[0])
+            self.price.append(float(i[1]))
+            self.quantity.append(int(i[2]))
+            self.rate.append(float("%.2f"%float(i[4])))
+        x = np.arange(len(self.labels))
+        width = 0.25
+        rect1 = self.ax.bar(x + 0.00, self.price, width, label="Price")
+        rect2 = self.ax.bar(x + 0.25, self.quantity, width, label="Quantity")
+        rect3 = self.ax.bar(x + 0.50, self.rate, width, label="rate")
+        self.ax.set_ylabel('TEST')
+        self.ax.set_title('TEST')
+        self.ax.set_xticks(x)
+        self.ax.set_xticklabels(self.labels)
+        self.ax.legend()
+        self.autolabel(rect1)
+        self.autolabel(rect2)
+        self.autolabel(rect3)
+        self.draw()
+    def autolabel(self, rects):
+        for rect in rects:
+            height = rect.get_height()
+            self.ax.annotate('{}'.format(height),
+                    xy=(rect.get_x() + rect.get_width() / 2, height),
+                    xytext=(0, 3),  # 3 points vertical offset
+                    textcoords="offset points",
+                    ha='center', va='bottom')
