@@ -212,8 +212,11 @@ class MainWindow(QMainWindow):
         self.conn.commit()
 
     def delete(self, *args):
-        pass
-
+        row = self.mytable.currentRow()
+        item = self.mytable.verticalHeaderItem(row).text()
+        self.cur.execute('delete from items where name=(?)', (item, ))
+        self.conn.commit()
+        self.mytable.removeRow(row)
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
