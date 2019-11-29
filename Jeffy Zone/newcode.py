@@ -225,7 +225,11 @@ class MainWindow(QMainWindow):
 
     def delete(self, *args):
         row = self.mytable.currentRow()
-        item = self.mytable.verticalHeaderItem(row).text()
+        try:
+            item = self.mytable.verticalHeaderItem(row).text()
+        except:
+            QMessageBox.about(self, "Delete Error", "Please select items in the table.")
+            return
         self.cur.execute('delete from items where name=(?)', (item, ))
         self.conn.commit()
         self.mytable.removeRow(row)
