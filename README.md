@@ -25,4 +25,4 @@
 | 62070045 | นาย ชวิน โล่รัตนเสน่ห์ | [jeffy34931](https://github.com/jeffy34931)
 | 62070067 | นาย ณัฐวัฒน์ สามสี | [nattawat2345](https://github.com/nattawat2345)
 | 62070159 | นางสาว ริณี เปรมานนท์ | [angelrinee](https://github.com/angelrinee)
-| 62070179 | นาย ศิวกร สมคะเณย์ | [gamezazad123](https://github.com/gamezazad123)
+| 62070179 | นาย ศิวกร สมคะเณย์ | [gamezazad123](https://github.com/gamezazad123) 
