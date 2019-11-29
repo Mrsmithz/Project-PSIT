@@ -140,6 +140,7 @@ class MainWindow(QMainWindow):
     def submit(self, *args):
         """Submit input from input slots when called and update cell in the same time"""
         if not self.name_input.toPlainText():
+            QMessageBox.about(self, "Input Error", "Please enter numbers in the Name box.")
             return
         name = self.name_input.toPlainText()
         try:
