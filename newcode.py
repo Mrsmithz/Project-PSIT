@@ -21,6 +21,7 @@ from PyQt5.QtWidgets import QLabel
 from PyQt5.QtWidgets import QStatusBar
 from PyQt5.QtWidgets import QVBoxLayout
 from plotcanvas import MyDynamicMplCanvas
+from plotcanvas import barplot
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -121,22 +122,36 @@ class MainWindow(QMainWindow):
         self.menu_bar = QMenuBar(self)
         self.menu_bar.setGeometry(0, 0, 1024, 20)
         self.menu_top = QMenu(self.menu_bar)
-        self.menu_top.setTitle("Menu")
+        self.menu_top.setTitle("Export")
         self.setMenuBar(self.menu_bar)
 
         self.menu_top.addSeparator()
-        self.export = QAction(self)
-        self.export.setText("Export")
-        self.menu_top.addAction(self.export)
+
+        self.export1 = QAction(self)
+        self.export1.setText("1")
+        self.export1.triggered.connect(self.plot_price)
+
+        self.export2 = QAction(self)
+        self.export2.setText("2")
+        self.export2.triggered.connect(self.plot_quantity)
+
+        self.export3 = QAction(self)
+        self.export3.setText("3")
+        self.export3.triggered.connect(self.plot_rate)
+
+        self.menu_top.addAction(self.export1)
+        self.menu_top.addAction(self.export2)
+        self.menu_top.addAction(self.export3)
         self.menu_bar.addAction(self.menu_top.menuAction())
 
         self.setCentralWidget(self.main)
 
         self.plotpie = QWidget(self.main)
-        self.plotpie.setGeometry(400, 270, 611, 471)
+        self.plotpie.setGeometry(400, 220, 611, 471)
         self.pie_box = QVBoxLayout(self.plotpie)
         self.pie = MyDynamicMplCanvas(self.plotpie)
         self.pie_box.addWidget(self.pie)
+
     def submit(self, *args):
         """Submit input from input slots when called and update cell in the same time"""
         if not self.name_input.toPlainText():
@@ -217,6 +232,15 @@ class MainWindow(QMainWindow):
         self.cur.execute('delete from items where name=(?)', (item, ))
         self.conn.commit()
         self.mytable.removeRow(row)
+
+    def plot_price(self):
+        pass
+
+    def plot_quantity(self):
+        pass
+
+    def plot_rate(self):
+        pass
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
