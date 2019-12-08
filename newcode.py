@@ -1,3 +1,4 @@
+# import all funtions that we need!!!
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 import sqlite3
@@ -22,112 +23,113 @@ from PyQt5.QtWidgets import QStatusBar
 from PyQt5.QtWidgets import QVBoxLayout
 from plotcanvas import MyDynamicMplCanvas
 from plotcanvas import barplot
-
+# make a class!
 class MainWindow(QMainWindow):
-    def __init__(self):
-        super().__init__()
+    def __init__(self): # define an object as self
+        super().__init__() # ??
 
-        self.resize(1024, 800)
+        self.resize(1024, 800) # set the size of ???
 
-        self.conn = sqlite3.connect('test.db')
-        self.cur = self.conn.cursor()
+        self.conn = sqlite3.connect('test.db') # connecting to the database ("test.db")
+        self.cur = self.conn.cursor() # ???
 
         self.main = QWidget(self)
 
-        self.clearbtn = QPushButton(self.main)
-        self.clearbtn.setGeometry(250, 620, 111, 51)
-        self.clearbtn.setText("Clear")
-        self.clearbtn.clicked.connect(self.clear)
+        self.clearbtn = QPushButton(self.main) # set variable clear button
+        self.clearbtn.setGeometry(250, 620, 111, 51) # set where the button is?
+        self.clearbtn.setText("Clear") # set the name of button --> "Clear"
+        self.clearbtn.clicked.connect(self.clear) # if the button was clicked, it will connecting to "clear" function
+ 
+        self.submitbtn = QPushButton(self.main) # set variable --> submit button
+        self.submitbtn.setGeometry(10, 620, 111, 51) # set where the button is?
+        self.submitbtn.setText("Submit") # set the name of the button --> "Submit"
+        self.submitbtn.clicked.connect(self.submit) # if the button was clicked, it will connecting to "submit" function
 
-        self.submitbtn = QPushButton(self.main)
-        self.submitbtn.setGeometry(10, 620, 111, 51)
-        self.submitbtn.setText("Submit")
-        self.submitbtn.clicked.connect(self.submit)
+        self.deletebtn = QPushButton(self.main) # set variable --> delete button
+        self.deletebtn.setGeometry(130, 620, 111, 51) #set where the button is?
+        self.deletebtn.setText("Delete") # set the name of the button --> "Delete"
+        self.deletebtn.clicked.connect(self.delete) # if the button was clicked, it will connecting to "delete" function
 
-        self.deletebtn = QPushButton(self.main)
-        self.deletebtn.setGeometry(130, 620, 111, 51)
-        self.deletebtn.setText("Delete")
-        self.deletebtn.clicked.connect(self.delete)
+        self.name_input = QTextEdit(self.main) # set variable --> input() of name
+        self.name_input.setGeometry(90, 230, 291, 41) # set where the name input is?
+        self.name_input.setFontPointSize(14) # set the size of the letter that you will going to input
 
-        self.name_input = QTextEdit(self.main)
-        self.name_input.setGeometry(90, 230, 291, 41)
-        self.name_input.setFontPointSize(14)
+        self.price_input = QTextEdit(self.main) # set variable --> input() of price
+        self.price_input.setGeometry(90, 280, 291, 41) # set where the  price input is?
+        self.price_input.setFontPointSize(14) # set the size of the letter that you will going to input
 
-        self.price_input = QTextEdit(self.main)
-        self.price_input.setGeometry(90, 280, 291, 41)
-        self.price_input.setFontPointSize(14)
+        self.quantity_input = QTextEdit(self.main) # set variable --> input() of quantity
+        self.quantity_input.setGeometry(90, 330, 291, 41) # set where the quantity input is?
+        self.quantity_input.setFontPointSize(14) # set the size of the letter that you will going to input
 
-        self.quantity_input = QTextEdit(self.main)
-        self.quantity_input.setGeometry(90, 330, 291, 41)
-        self.quantity_input.setFontPointSize(14)
+        self.date_input = QDateEdit(self.main) # set variable --> input() of date
+        self.date_input.setGeometry(120, 380, 91, 21) # set where the date input is?
+        currentdate = QtCore.QDateTime.currentDateTime() # use the Qdatetime & currentdatetime funcction that you import at the beginning 
+        self.date_input.setDate(currentdate.date()) # set variable --> input() of date
+        self.date_input.setLocale(QtCore.QLocale(QtCore.QLocale.English, QtCore.QLocale.UnitedStates)) # The local time is in United States
+        self.date_input.setCalendarPopup(True) # set the pop-up of the carlender
 
-        self.date_input = QDateEdit(self.main)
-        self.date_input.setGeometry(120, 380, 91, 21)
-        currentdate = QtCore.QDateTime.currentDateTime()
-        self.date_input.setDate(currentdate.date())
-        self.date_input.setLocale(QtCore.QLocale(QtCore.QLocale.English, QtCore.QLocale.UnitedStates))
-        self.date_input.setCalendarPopup(True)
+        self.rate_input = QTextEdit(self.main) # set variable --> input() of rate
+        self.rate_input.setGeometry(130, 420, 171, 41) # set where the input() is?
+        self.rate_input.setFontPointSize(14) # set the size of the letter that you will going to input
 
-        self.rate_input = QTextEdit(self.main)
-        self.rate_input.setGeometry(130, 420, 171, 41)
-        self.rate_input.setFontPointSize(14)
+        self.note_input = QTextEdit(self.main) # set variable --> input() of note
 
-        self.note_input = QTextEdit(self.main)
-        self.note_input.setGeometry(90, 470, 291, 131)
-        self.note_input.setFontPointSize(14)
+        self.note_input.setGeometry(90, 470, 291, 131) # set where the input() is?
+        self.note_input.setFontPointSize(14) # set the size of the letter that you will going to input
 
-        self.mytable = QTableWidget(self.main)
-        self.mytable.setEditTriggers(QtWidgets.QAbstractItemView.DoubleClicked)
-        header = self.mytable.horizontalHeader()
-        header.setDefaultSectionSize(190)
-        self.mytable.setGeometry(10, 10, 1001, 211)
-        self.mytable.doubleClicked.connect(self.savefromtable)
-        self.mytable.cellPressed.connect(self.savefromtable)
+        self.mytable = QTableWidget(self.main) # set the table
+        self.mytable.setEditTriggers(QtWidgets.QAbstractItemView.DoubleClicked) # ???? 
+        header = self.mytable.horizontalHeader() # the header is the horizontal header
+        header.setDefaultSectionSize(190) # set the size of ???
+        self.mytable.setGeometry(10, 10, 1001, 211) # set where the table is?
+        self.mytable.doubleClicked.connect(self.savefromtable) # connecting to double-cliked function
+        self.mytable.cellPressed.connect(self.savefromtable) # connecting to cell-pressed
 
-        self.name_label = QLabel(self.main)
-        self.name_label.setGeometry(10, 240, 61, 16)
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        self.name_label.setFont(font)
-        self.name_label.setText("Name")
+        self.name_label = QLabel(self.main) # set the variable --> label of "name"
+        self.name_label.setGeometry(10, 240, 61, 16) # set where the "name" label is?
+        font = QtGui.QFont()  
+        font.setPointSize(12) # set the point size
+        self.name_label.setFont(font) # set a font
+        self.name_label.setText("Name") # called this label as "Name"
 
-        self.price_label = QLabel(self.main)
-        self.price_label.setGeometry(10, 290, 51, 16)
-        self.price_label.setFont(font)
-        self.price_label.setText("Price")
+        self.price_label = QLabel(self.main) # set the variable --> label of "price"
+        self.price_label.setGeometry(10, 290, 51, 16) # set where the "price" label is?
+        self.price_label.setFont(font) # set a font
+        self.price_label.setText("Price") # called this label as "Price"
 
-        self.quantity_label = QLabel(self.main)
-        self.quantity_label.setGeometry(10, 343, 81, 20)
-        self.quantity_label.setFont(font)
-        self.quantity_label.setText("Quantity")
+        self.quantity_label = QLabel(self.main) # set the variable --> label of "price"
+        self.quantity_label.setGeometry(10, 343, 81, 20)  # set where the "price" label is?
+        self.quantity_label.setFont(font) # set a font
+        self.quantity_label.setText("Quantity") # called this label as "Quantity"
 
-        self.date_label = QLabel(self.main)
-        self.date_label.setGeometry(10, 380, 101, 21)
-        self.date_label.setFont(font)
-        self.date_label.setText("Date")
+        self.date_label = QLabel(self.main) # set the variable --> label of "price"
+        self.date_label.setGeometry(10, 380, 101, 21)  # set where the "price" label is?
+        self.date_label.setFont(font) # set a font
+        self.date_label.setText("Date") # called this label as "Date"
 
-        self.rate_label = QLabel(self.main)
-        self.rate_label.setGeometry(10, 430, 111, 21)
-        self.rate_label.setFont(font)
-        self.rate_label.setText("Rate")
+        self.rate_label = QLabel(self.main) # set the variable --> label of "price"
+        self.rate_label.setGeometry(10, 430, 111, 21)  # set where the "price" label is?
+        self.rate_label.setFont(font) # set a font
+        self.rate_label.setText("Rate") # called this label as "Rate"
 
-        self.note_label = QLabel(self.main)
-        self.note_label.setGeometry(10, 520, 81, 21)
-        self.note_label.setFont(font)
-        self.note_label.setText("Note")
+        self.note_label = QLabel(self.main) # set the variable --> label of "price"
+        self.note_label.setGeometry(10, 520, 81, 21)  # set where the "price" label is?
+        self.note_label.setFont(font) # set a font
+        self.note_label.setText("Note") # called this label as "Note"
 
-        self.status_bar = QStatusBar(self)
-        self.setStatusBar(self.status_bar)
+        self.status_bar = QStatusBar(self) # use the status bar that you import from the beginning
+        self.setStatusBar(self.status_bar) # ???
 
-        self.menu_bar = QMenuBar(self)
-        self.menu_bar.setGeometry(0, 0, 1024, 20)
-        self.menu_top = QMenu(self.menu_bar)
-        self.menu_top.setTitle("Export")
+        self.menu_bar = QMenuBar(self) # set variables in menu bar
+        self.menu_bar.setGeometry(0, 0, 1024, 20) # set where the variable is?
+        self.menu_top = QMenu(self.menu_bar) # ??? 
+        self.menu_top.setTitle("Export") # set the title as "Export"
         self.setMenuBar(self.menu_bar)
 
         self.menu_top.addSeparator()
 
-        self.export1 = QAction(self)
+        self.export1 = QAction(self) 
         self.export1.setText("1")
         self.export1.triggered.connect(self.plot_price)
 
