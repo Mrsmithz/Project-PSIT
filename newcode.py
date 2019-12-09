@@ -31,8 +31,6 @@ class MainWindow(QMainWindow):
         path = str(os.path.dirname(os.path.abspath(__file__))).replace("\\", "/")
 
         self.resize(1024, 800) # set the size of mainwindow
-        #self.setStyleSheet(f"background-image: url({path}/img/login.jpg);")
-
         self.conn = sqlite3.connect('test.db') # connecting to the database ("test.db")
         self.cur = self.conn.cursor()
 
