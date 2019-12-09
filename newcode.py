@@ -23,12 +23,15 @@ from PyQt5.QtWidgets import QStatusBar
 from PyQt5.QtWidgets import QVBoxLayout
 from PyQt5.QtCore import QLocale
 from plotcanvas import MyDynamicMplCanvas
-from plotcanvas import barplot
+import os
 # make a class!
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        path = str(os.path.dirname(os.path.abspath(__file__))).replace("\\", "/")
+
         self.resize(1024, 800) # set the size of mainwindow
+        #self.setStyleSheet(f"background-image: url({path}/img/login.jpg);")
 
         self.conn = sqlite3.connect('test.db') # connecting to the database ("test.db")
         self.cur = self.conn.cursor()
@@ -130,15 +133,15 @@ class MainWindow(QMainWindow):
 
         self.export1 = QAction(self)
         self.export1.setText("1")
-        self.export1.triggered.connect(self.plot_price)
+        #self.export1.triggered.connect(self.plot_price)
 
         self.export2 = QAction(self)
         self.export2.setText("2")
-        self.export2.triggered.connect(self.plot_quantity)
+        #self.export2.triggered.connect(self.plot_quantity)
 
         self.export3 = QAction(self)
         self.export3.setText("3")
-        self.export3.triggered.connect(self.plot_rate)
+        #self.export3.triggered.connect(self.plot_rate)
 
         self.menu_top.addAction(self.export1)
         self.menu_top.addAction(self.export2)
@@ -155,14 +158,16 @@ class MainWindow(QMainWindow):
 
     def submit(self, *args):
         """Submit input from input slots when called and update cell in the same time"""
-        if not self.name_input.text():
-            return
         name = self.name_input.text()
-        price = float(self.price_input.text())
-        quantity = int(self.quantity_input.text())
+        try:
+            price = float(self.price_input.text())
+            quantity = int(self.quantity_input.text())
+            monthly = float(self.rate_input.text())
+        except ValueError:
+            self.alert()
+            return
         date = str(self.date_input.date().toPyDate())
         date = "-".join((date[8:10], date[5:7], date[0:4]))
-        monthly = float(self.rate_input.text())
         notes = self.note_input.text()
         self.cur.execute("insert into items values (?, ?, ?, ?, ?, ?)", (name, price, quantity, date, monthly, notes))
         self.conn.commit()
@@ -228,20 +233,27 @@ class MainWindow(QMainWindow):
         self.conn.commit()
 
     def delete(self, *args):
-        row = self.mytable.currentRow()
-        item = self.mytable.verticalHeaderItem(row).text()
-        self.cur.execute('delete from items where name=(?)', (item, ))
-        self.conn.commit()
-        self.mytable.removeRow(row)
+        try:
+            row = self.mytable.currentRow()
+            item = self.mytable.verticalHeaderItem(row).text()
+            self.cur.execute('delete from items where name=(?)', (item, ))
+            self.conn.commit()
+            self.mytable.removeRow(row)
+        except AttributeError:
+            msgbox = QMessageBox(self)
+            msgbox.setWindowTitle("ERROR!!")
+            msgbox.setText("Please Select Row to delete")
+            msgbox.setIcon(QMessageBox.Critical)
+            msgbox.setStandardButtons(QMessageBox.Retry)
+            msgbox.exec_()
 
-    def plot_price(self):
-        pass
-
-    def plot_quantity(self):
-        pass
-
-    def plot_rate(self):
-        pass
+    def alert(self):
+        msgbox = QMessageBox(self)
+        msgbox.setWindowTitle("ERROR!!")
+        msgbox.setText("Price Should Be Float Number Only\nQuantity Should Be Integer Only\nRate Should Be Integer Only")
+        msgbox.setIcon(QMessageBox.Critical)
+        msgbox.setStandardButtons(QMessageBox.Retry)
+        msgbox.exec_()
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
