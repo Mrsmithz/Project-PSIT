@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import QLineEdit
 from PyQt5.QtGui import QFont
 from PyQt5 import QtCore
 from newcode import MainWindow
-
+import os
 class Login(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -21,9 +21,10 @@ class Login(QMainWindow):
         font = QFont()
         font.setPointSize(16)
 
+        path = str(os.path.dirname(os.path.abspath(__file__))).replace("\\", "/")
         self.display_img = QWidget(self.main)
         self.display_img.setGeometry(10, 40, 481, 181)
-        self.display_img.setStyleSheet("background-image: url(E:/Coding/pyqt/banner6.jpg);")
+        self.display_img.setStyleSheet(f"background-image: url({path}/img/login.jpg);")
 
         self.submitbtn = QPushButton(self.main)
         self.submitbtn.setGeometry(140, 390, 231, 51)
@@ -62,7 +63,13 @@ class Login(QMainWindow):
             if pwd == test[0][0]:
                 self.openwindow()
         else:
-            QMessageBox.about(self, "Incorrect", "Incorrect Username or Password")
+            msgbox = QMessageBox(self)
+            #msgbox.about(self, "Incorrect", "\n\nIncorrect Username or Password\n\n")
+            msgbox.setWindowTitle("INCORRECT!!")
+            msgbox.setText("\n\nIncorrect Username or Password\n\n")
+            msgbox.setIcon(QMessageBox.Critical)
+            msgbox.setStandardButtons(QMessageBox.Retry)
+            msgbox.exec_()
             return
     def openwindow(self):
         #self.windows = QMainWindow()
