@@ -23,12 +23,14 @@ from PyQt5.QtWidgets import QStatusBar
 from PyQt5.QtWidgets import QVBoxLayout
 from PyQt5.QtCore import QLocale
 from plotcanvas import MyDynamicMplCanvas
+from PyQt5.QtGui import QIcon
 import os
 # make a class!
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         path = str(os.path.dirname(os.path.abspath(__file__))).replace("\\", "/")
+        self.setWindowIcon(QIcon(f'{path}/img/link.png'))
 
         self.resize(1024, 800) # set the size of mainwindow
         self.conn = sqlite3.connect('test.db') # connecting to the database ("test.db")
@@ -66,14 +68,14 @@ class MainWindow(QMainWindow):
         self.quantity_input.setFont(font) # set the size of the letter that you will going to input
 
         self.date_input = QDateEdit(self.main) # set variable --> input() of date
-        self.date_input.setGeometry(120, 380, 91, 21) # set where the date input is
+        self.date_input.setGeometry(90, 380, 91, 21) # set where the date input is
         currentdate = QtCore.QDateTime.currentDateTime()
         self.date_input.setDate(currentdate.date()) # set variable --> input() of date
         self.date_input.setLocale(QtCore.QLocale(QtCore.QLocale.English, QtCore.QLocale.UnitedKingdom)) # The local time is in United States
         self.date_input.setCalendarPopup(True) # set the pop-up of the carlender
 
         self.rate_input = QLineEdit(self.main) # set variable --> input() of rate
-        self.rate_input.setGeometry(130, 420, 171, 41) # set where the input() is
+        self.rate_input.setGeometry(90, 420, 171, 41) # set where the input() is
         self.rate_input.setFont(font) # set the size of the letter that you will going to input
 
         self.note_input = QLineEdit(self.main) # set variable --> input() of note
@@ -83,10 +85,10 @@ class MainWindow(QMainWindow):
         self.mytable = QTableWidget(self.main) # set the table
         self.mytable.setEditTriggers(QtWidgets.QAbstractItemView.DoubleClicked) # set edittriggers for mytable
         header = self.mytable.horizontalHeader() # the header is the horizontal header
-        header.setDefaultSectionSize(190) # set the size of ???
+        header.setDefaultSectionSize(190) # set the size of header
         self.mytable.setGeometry(10, 10, 1001, 211) # set where the table is?
-        self.mytable.doubleClicked.connect(self.savefromtable) # connecting to double-cliked function
-        self.mytable.cellPressed.connect(self.savefromtable) # connecting to cell-pressed
+        self.mytable.doubleClicked.connect(self.savefromtable) # connect to function when doubleclicked
+        self.mytable.cellPressed.connect(self.savefromtable) # connect to function when get cellpressed
 
         self.name_label = QLabel(self.main) # set the variable --> label of "name"
         self.name_label.setGeometry(10, 240, 61, 16) # set where the "name" label is
