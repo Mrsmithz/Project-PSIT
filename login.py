@@ -73,15 +73,10 @@ class Login(QMainWindow):
         if test:
             if pwd == test[0][0]:
                 self.openwindow()
+            else:
+                self.alert()
         else:
-            msgbox = QMessageBox(self)
-            #msgbox.about(self, "Incorrect", "\n\nIncorrect Username or Password\n\n")
-            msgbox.setWindowTitle("INCORRECT!!")
-            msgbox.setText("\n\nIncorrect Username or Password\n\n")
-            msgbox.setIcon(QMessageBox.Critical)
-            msgbox.setStandardButtons(QMessageBox.Retry)
-            msgbox.exec_()
-            return
+            self.alert()
     def openwindow(self):
         """function to open main UI"""
         self.another = MainWindow()
@@ -94,6 +89,16 @@ class Login(QMainWindow):
         pwd = pwd.encode('utf-8')
         pwd = hashlib.sha512(pwd).hexdigest()
         return pwd
+    def alert(self):
+        font = QFont()
+        font.setPointSize(14)
+        msgbox = QMessageBox(self)
+        msgbox.setWindowTitle("INCORRECT!!")
+        msgbox.setText("\n\nIncorrect Username or Password\n\n")
+        msgbox.setFont(font)
+        #msgbox.setIcon(QMessageBox.Critical)
+        msgbox.setStandardButtons(QMessageBox.Retry)
+        msgbox.exec_()
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     login = Login()
