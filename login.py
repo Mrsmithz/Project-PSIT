@@ -11,6 +11,7 @@ from PyQt5.QtGui import QFont
 from PyQt5 import QtCore
 from newcode import MainWindow
 import os
+import hashlib
 class Login(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -55,8 +56,9 @@ class Login(QMainWindow):
         self.conn = sqlite3.connect('user.db')
         self.cur = self.conn.cursor()
     def check(self):
+        """this function will check if username/password are correct or not"""
         user = self.user_input.text()
-        pwd = self.pass_input.text()
+        pwd = self.encrypt()
         self.cur.execute("select password from user where username=(?)", (user, ))
         test = self.cur.fetchall()
         if test:
@@ -72,11 +74,17 @@ class Login(QMainWindow):
             msgbox.exec_()
             return
     def openwindow(self):
-        #self.windows = QMainWindow()
+        """function to open main UI"""
         self.another = MainWindow()
         self.another.update()
         login.hide()
         self.another.show()
+    def encrypt(self):
+        """this function will encrypted password with sha512"""
+        pwd = self.pass_input.text()
+        pwd = pwd.encode('utf-8')
+        pwd = hashlib.sha512(pwd).hexdigest()
+        return pwd
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     login = Login()
