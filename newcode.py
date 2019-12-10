@@ -31,6 +31,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         path = str(os.path.dirname(os.path.abspath(__file__))).replace("\\", "/")
         self.setWindowIcon(QIcon(f'{path}/img/link.png'))
+        self.setWindowTitle('ดีจ้า')
 
         self.resize(1024, 800) # set the size of mainwindow
         self.conn = sqlite3.connect('test.db') # connecting to the database ("test.db")
