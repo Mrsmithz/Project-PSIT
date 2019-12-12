@@ -19,7 +19,7 @@ class Login(QMainWindow):
 
         self.resize(500, 600)
 
-        path = str(os.path.dirname(os.path.abspath(__file__))).replace("\\", "/")
+        path = str(os.path.dirname(os.path.abspath(__file__))).replace("\\", "/") # get path where you're running this file
         self.main = QWidget(self)
         self.setWindowTitle("Login")
         self.setWindowIcon(QIcon(f"{path}/img/user.png"))
@@ -62,7 +62,7 @@ class Login(QMainWindow):
 
         self.setCentralWidget(self.main)
 
-        self.conn = sqlite3.connect('user.db')
+        self.conn = sqlite3.connect('user.db') # connect to user database
         self.cur = self.conn.cursor()
     def check(self):
         """this function will check if username/password are correct or not"""
@@ -75,8 +75,10 @@ class Login(QMainWindow):
                 self.openwindow()
             else:
                 self.alert()
+                return
         else:
             self.alert()
+            return
     def openwindow(self):
         """function to open main UI"""
         self.another = MainWindow()
@@ -90,13 +92,13 @@ class Login(QMainWindow):
         pwd = hashlib.sha512(pwd).hexdigest()
         return pwd
     def alert(self):
+        """alert message when user gives incorrect input"""
         font = QFont()
         font.setPointSize(14)
         msgbox = QMessageBox(self)
         msgbox.setWindowTitle("INCORRECT!!")
         msgbox.setText("\n\nIncorrect Username or Password\n\n")
         msgbox.setFont(font)
-        #msgbox.setIcon(QMessageBox.Critical)
         msgbox.setStandardButtons(QMessageBox.Retry)
         msgbox.exec_()
 if __name__ == "__main__":
