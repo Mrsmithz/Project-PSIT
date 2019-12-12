@@ -244,9 +244,3 @@ class MainWindow(QMainWindow):
         msgbox2.setText("You've Entered The Name That Already in The Database\nPlease Choose Another name")
         msgbox2.setStandardButtons(QMessageBox.Retry)
         msgbox2.exec_()
-if __name__ == "__main__":
-    app = QtWidgets.QApplication(sys.argv)
-    ui = MainWindow()
-    ui.update()
-    ui.show()
-    sys.exit(app.exec_())
