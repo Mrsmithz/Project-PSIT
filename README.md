@@ -22,6 +22,20 @@
     ```
     py -m pip install matploblib
     ```
+### Instructions For Testing
+ - How to run
+   - Run login.py by command down below
+    ```
+    py login.py
+    ```
+   - username
+    ```
+    admin
+    ```
+   - password (just for testing)
+    ```
+    1234
+    ```
 ### References
  - [Python 3.7](https://docs.python.org/3.7/)
  - [PyQt5](https://www.riverbankcomputing.com/static/Docs/PyQt5/)
