@@ -1,4 +1,4 @@
-# import all funtions that we need!!!
+# import all funtions that we need
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 import sqlite3
@@ -9,32 +9,28 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QAction
 from PyQt5.QtWidgets import QLineEdit
 from PyQt5.QtWidgets import QMainWindow
-from PyQt5.QtWidgets import QMenu
-from PyQt5.QtWidgets import QMenuBar
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtWidgets import QWidget
-from PyQt5.QtCore import QTimer
-from PyQt5.QtWidgets import QMenu
 from PyQt5.QtWidgets import QTextEdit
 from PyQt5.QtWidgets import QDateEdit
 from PyQt5.QtWidgets import QTableWidget
 from PyQt5.QtWidgets import QLabel
-from PyQt5.QtWidgets import QStatusBar
 from PyQt5.QtWidgets import QVBoxLayout
-from PyQt5.QtCore import QLocale
 from plotcanvas import MyDynamicMplCanvas
 from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QFont
 import os
-# make a class!
+# make a class
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        path = str(os.path.dirname(os.path.abspath(__file__))).replace("\\", "/")
+        path = str(os.path.dirname(os.path.abspath(__file__))).replace("\\", "/") # get path where you're running this file
         self.setWindowIcon(QIcon(f'{path}/img/link.png'))
         self.setWindowTitle('ดีจ้า')
 
         self.resize(1024, 800) # set the size of mainwindow
-        self.conn = sqlite3.connect('test.db') # connecting to the database ("test.db")
+        self.conn = sqlite3.connect('data.db') # connecting to the database
         self.cur = self.conn.cursor()
 
         self.main = QWidget(self)
@@ -137,46 +133,21 @@ class MainWindow(QMainWindow):
         self.note_label.setText("Note") # called this label as "Note"
         self.note_label.setStyleSheet('background:transparent;')
 
-        self.status_bar = QStatusBar(self) # use the status bar that you import from the beginning
-        self.setStatusBar(self.status_bar)
-
-        self.menu_bar = QMenuBar(self) # set variables in menu bar
-        self.menu_bar.setGeometry(0, 0, 1024, 20) # set where the variable is
-        self.menu_top = QMenu(self.menu_bar)
-        self.menu_top.setTitle("Export")
-        self.setMenuBar(self.menu_bar)
-
-        self.menu_top.addSeparator()
-
-        self.export1 = QAction(self)
-        self.export1.setText("1")
-        #self.export1.triggered.connect(self.plot_price)
-
-        self.export2 = QAction(self)
-        self.export2.setText("2")
-        #self.export2.triggered.connect(self.plot_quantity)
-
-        self.export3 = QAction(self)
-        self.export3.setText("3")
-        #self.export3.triggered.connect(self.plot_rate)
-
-        self.menu_top.addAction(self.export1)
-        self.menu_top.addAction(self.export2)
-        self.menu_top.addAction(self.export3)
-        self.menu_bar.addAction(self.menu_top.menuAction())
-
         self.setCentralWidget(self.main)
 
         self.plotpie = QWidget(self.main)
         self.plotpie.setStyleSheet('background:transparent;')
-        self.plotpie.setGeometry(400, 220, 611, 471)
+        self.plotpie.setGeometry(400, 220, 611, 471) # set the pie graph box
         self.pie_box = QVBoxLayout(self.plotpie)
-        self.pie = MyDynamicMplCanvas(self.plotpie)
+        self.pie = MyDynamicMplCanvas(self.plotpie) # call pie plotting modules
         self.pie_box.addWidget(self.pie)
 
     def submit(self, *args):
-        """Submit input from input slots when called and update cell in the same time"""
+        """This function will get inputs from user if inputs is correct it will store inputs in database"""
         name = self.name_input.text()
+        if not name:
+            self.alert()
+            return
         try:
             price = float(self.price_input.text())
             quantity = int(self.quantity_input.text())
@@ -187,28 +158,16 @@ class MainWindow(QMainWindow):
         date = str(self.date_input.date().toPyDate())
         date = "-".join((date[8:10], date[5:7], date[0:4]))
         notes = self.note_input.toPlainText()
-        self.cur.execute("insert into items values (?, ?, ?, ?, ?, ?)", (name, price, quantity, date, monthly, notes))
-        self.conn.commit()
-        list1 = self.cur.execute("select * from items")
-        header = []
-        header2 = ["Price", "Quantity", "MovedInDate", "Monthly Rate", "Notes"]
-        self.mytable.setColumnCount(5)
-        self.mytable.setRowCount(0)
-        row = 0
-        for items in list1:
-            header.append(items[0])
-            cols = 0
-            self.mytable.insertRow(row)
-            for value in items[1:]:
-                item = QTableWidgetItem(value)
-                self.mytable.setItem(row, cols, item)
-                cols += 1
-            row += 1
-        self.mytable.setHorizontalHeaderLabels(header2)
-        self.mytable.setVerticalHeaderLabels(header)
-        self.clear()
+        try:
+            self.cur.execute("insert into items values (?, ?, ?, ?, ?, ?)", (name, price, quantity, date, monthly, notes))
+            self.conn.commit()
+            self.update()
+            self.clear()
+        except sqlite3.IntegrityError: # this will triggered when user enter name that already have in database
+            self.alert_same_name()
+            return
     def update(self, *args):
-        """Update Cell when called"""
+        """This function will update cell when it's called"""
         list1 = self.cur.execute("select * from items order by rowid")
         header = []
         header2 = ["Price", "Quantity", "MovedInDate", "Monthly Rate", "Notes"]
@@ -226,10 +185,9 @@ class MainWindow(QMainWindow):
             row += 1
         self.mytable.setHorizontalHeaderLabels(header2)
         self.mytable.setVerticalHeaderLabels(header)
-        self.headertest = header
 
     def clear(self, *args):
-        """Clear all input slot"""
+        """This function will clear all input slots"""
         self.name_input.clear()
         self.price_input.clear()
         self.quantity_input.clear()
@@ -237,7 +195,7 @@ class MainWindow(QMainWindow):
         self.note_input.clear()
 
     def savefromtable(self):
-        """Save input from Cell in MyTable Instantly"""
+        """This function will update item in database when user edit it in the cell"""
         row = self.mytable.rowCount()
         col = self.mytable.columnCount()
         header2 = ["price", "quantity", "movedindate", "monthlyrate", "notes"]
@@ -251,6 +209,7 @@ class MainWindow(QMainWindow):
         self.conn.commit()
 
     def delete(self, *args):
+        """This function will delete row that user selected if not selected any row it will raise ERROR"""
         try:
             row = self.mytable.currentRow()
             item = self.mytable.verticalHeaderItem(row).text()
@@ -266,13 +225,25 @@ class MainWindow(QMainWindow):
             msgbox.exec_()
 
     def alert(self):
+        """This function will alert message if user gives incorrect input"""
+        font = QFont()
+        font.setPointSize(14)
         msgbox = QMessageBox(self)
+        msgbox.setFont(font)
         msgbox.setWindowTitle("ERROR!!")
-        msgbox.setText("Price Should Be Float Number Only\nQuantity Should Be Integer Only\nRate Should Be Integer Only")
-        msgbox.setIcon(QMessageBox.Critical)
+        msgbox.setText("Must Enter Name\nPrice Should Be Float Number Only\nQuantity Should Be Integer Only\nRate Should Be Integer Only")
         msgbox.setStandardButtons(QMessageBox.Retry)
         msgbox.exec_()
-
+    def alert_same_name(self):
+        """This function will alert message if user give a name that already have in database"""
+        font = QFont()
+        font.setPointSize(14)
+        msgbox2 = QMessageBox(self)
+        msgbox2.setFont(font)
+        msgbox2.setWindowTitle("ERROR!!")
+        msgbox2.setText("You've Entered The Name That Already in The Database\nPlease Choose Another name")
+        msgbox2.setStandardButtons(QMessageBox.Retry)
+        msgbox2.exec_()
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     ui = MainWindow()
