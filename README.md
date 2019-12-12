@@ -1,5 +1,5 @@
 # Storage Management Program
-## On Progessing
+## Status : Finished !
 
 ### Feature
 > จดรายละเอียดสินค้าหรือวัตถุดิบ ทั้งน้ำหนัก ชนิด จำนวน วันที่ส่งเข้าระบบ กำหนดระยะเวลาในการจัดเก็บ มีการเก็บข้อมูลอย่างเป็นระบบ
@@ -7,7 +7,21 @@
 ### Built With
  - Python 3.7
  - PyQt5
-
+### Installing
+ - Python 3.7
+ ```
+ https://www.python.org/downloads/
+ ```
+ - PyQt5
+ You can install it by using the commands below in Windows Command Prompt
+ However you need to installed Python first!!
+ ```
+ py -m pip install PyQt5
+ ```
+ - Matplotlib
+ ```
+ py -m pip install matploblib
+ ```
 ### References
  - [Python 3.7](https://docs.python.org/3.7/)
  - [PyQt5](https://www.riverbankcomputing.com/static/Docs/PyQt5/)
