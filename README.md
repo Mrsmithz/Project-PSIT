@@ -7,6 +7,7 @@
 ### Built With
  - Python 3.7
  - PyQt5
+ - Matplotlib
 ### Installing
  - Python 3.7
  ```
@@ -24,7 +25,7 @@
 ### References
  - [Python 3.7](https://docs.python.org/3.7/)
  - [PyQt5](https://www.riverbankcomputing.com/static/Docs/PyQt5/)
-
+ - [Matplotlib](https://matplotlib.org/contents.html)
 ### Expected Gain
  - ฝึกฝนทักษะการเขียนโปรแกรมด้วย Python
  - ฝึกฝนการคิดและการแก้ปัญหาอย่างเป็นระบบ
