@@ -12,9 +12,8 @@
  ```
  https://www.python.org/downloads/
  ```
+ - Down below is a command line to install modules that we need you can run it with Windows Command Prompt
  - PyQt5
- You can install it by using the commands below in Windows Command Prompt
- However you need to installed Python first!!
  ```
  py -m pip install PyQt5
  ```
