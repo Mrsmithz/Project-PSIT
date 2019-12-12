@@ -13,14 +13,14 @@
  https://www.python.org/downloads/
  ```
  - Down below is a command line to install modules that we need you can run it with Windows Command Prompt
- - PyQt5
- ```
- py -m pip install PyQt5
- ```
- - Matplotlib
- ```
- py -m pip install matploblib
- ```
+   - PyQt5
+    ```
+    py -m pip install PyQt5
+    ```
+   - Matplotlib
+    ```
+    py -m pip install matploblib
+    ```
 ### References
  - [Python 3.7](https://docs.python.org/3.7/)
  - [PyQt5](https://www.riverbankcomputing.com/static/Docs/PyQt5/)
