@@ -20,7 +20,7 @@
     ```
    - Matplotlib
     ```
-    py -m pip install matploblib
+    py -m pip install matplotlib
     ```
 ### Instructions For Testing
  - How to run
