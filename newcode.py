@@ -217,12 +217,7 @@ class MainWindow(QMainWindow):
             self.conn.commit()
             self.mytable.removeRow(row)
         except AttributeError:
-            msgbox = QMessageBox(self)
-            msgbox.setWindowTitle("ERROR!!")
-            msgbox.setText("Please Select Row to delete")
-            msgbox.setIcon(QMessageBox.Critical)
-            msgbox.setStandardButtons(QMessageBox.Retry)
-            msgbox.exec_()
+            self.alert_unselected_row()
 
     def alert(self):
         """This function will alert message if user gives incorrect input"""
@@ -244,3 +239,14 @@ class MainWindow(QMainWindow):
         msgbox2.setText("You've Entered The Name That Already in The Database\nPlease Choose Another name")
         msgbox2.setStandardButtons(QMessageBox.Retry)
         msgbox2.exec_()
+    def alert_unselected_row(self):
+        """This function will alert message when you've clicked delete button but didn't selected any rows"""
+        font = QFont()
+        font.setPointSize(14)
+        msgbox3 = QMessageBox(self)
+        msgbox3.setFont(font)
+        msgbox3.setWindowTitle("ERROR!!")
+        msgbox3.setText("Please Select Row to delete")
+        msgbox3.setIcon(QMessageBox.Critical)
+        msgbox3.setStandardButtons(QMessageBox.Retry)
+        msgbox3.exec_()
