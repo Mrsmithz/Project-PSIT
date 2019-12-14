@@ -218,7 +218,7 @@ class MainWindow(QMainWindow):
             self.mytable.removeRow(row)
         except AttributeError:
             self.alert_unselected_row()
-
+            return
     def alert(self):
         """This function will alert message if user gives incorrect input"""
         font = QFont()
